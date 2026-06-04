@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-AI-Radar — the latest Microsoft AI &amp; agent solutions on GitHub</title>
+<style>
+  :root{
+    --bg:#0a0e17;--bg2:#0f1524;--panel:#131b2e;--panel2:#18233a;
+    --ink:#e8edf6;--muted:#94a3b8;--faint:#5b6b86;
+    --azure:#3b9eff;--azure2:#0a84ff;--cyan:#22d3ee;--violet:#a78bfa;
+    --green:#34d399;--amber:#fbbf24;--rose:#fb7185;--line:#22304d;
+    --r:14px;--maxw:1280px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 700px at 80% -10%,#16213c 0%,var(--bg) 55%);
+    color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--azure);text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .mono{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace}
+
+  header{padding:46px 0 22px}
+  .kicker{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--cyan);background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);padding:5px 12px;border-radius:999px}
+  h1{font-size:40px;letter-spacing:-.03em;margin:16px 0 8px}
+  h1 span{background:linear-gradient(120deg,var(--azure),var(--violet) 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:74ch;font-size:16px}
+  .stamp{margin-top:14px;font-size:12.5px;color:var(--faint)}
+  .stamp b{color:var(--ink)}
+
+  /* controls */
+  .controls{position:sticky;top:0;z-index:30;background:rgba(10,14,23,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 0;margin-top:18px}
+  .controls .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  #q{flex:1;min-width:200px;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:9px 14px;border-radius:10px;font-size:14px;outline:none}
+  #q:focus{border-color:var(--azure)}
+  select{background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:10px;font-size:13px;outline:none;cursor:pointer}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{background:var(--panel);color:var(--muted);border:0;padding:9px 14px;font-size:13px;cursor:pointer}
+  .seg button.on{background:var(--azure2);color:#fff}
+  .count{color:var(--faint);font-size:13px;margin-left:auto}
+
+  /* category nav chips */
+  .cats{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 4px}
+  .cat{font-size:12.5px;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer}
+  .cat:hover{color:var(--ink)} .cat.on{background:var(--violet);color:#0a0e17;border-color:var(--violet);font-weight:600}
+  .cat .n{opacity:.7;margin-left:5px}
+
+  section.group{padding:26px 0 6px;border-top:1px solid var(--line)}
+  section.group h2{font-size:20px;letter-spacing:-.01em;margin:0 0 2px;display:flex;align-items:baseline;gap:10px}
+  section.group h2 .gn{font-size:13px;color:var(--faint);font-weight:500}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin-top:16px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:8px;transition:.15s}
+  .card:hover{border-color:rgba(59,158,255,.5);transform:translateY(-2px)}
+  .card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .card .repo{font-family:"SF Mono",monospace;font-size:13px;font-weight:600;color:var(--azure);word-break:break-word;line-height:1.3}
+  .card .stars{font-size:12.5px;color:var(--amber);white-space:nowrap;font-weight:600}
+  .card .desc{font-size:13px;color:var(--muted);flex:1}
+  .card .foot{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px}
+  .b{font-weight:700;letter-spacing:.03em;padding:2px 7px;border-radius:5px;text-transform:uppercase}
+  .b-ms{background:rgba(59,158,255,.14);color:var(--azure)}
+  .b-comm{background:rgba(148,163,184,.13);color:var(--muted)}
+  .b-flagship{background:rgba(167,139,250,.15);color:var(--violet)}
+  .b-established{background:rgba(34,211,238,.12);color:var(--cyan)}
+  .b-new{background:rgba(52,211,153,.14);color:var(--green)}
+  .b-emerging{background:rgba(148,163,184,.1);color:var(--faint)}
+  .b-fresh{background:rgba(52,211,153,.14);color:var(--green)}
+  .b-active{background:rgba(251,191,36,.12);color:var(--amber)}
+  .b-stale{background:rgba(251,113,133,.13);color:var(--rose)}
+  .b-sup{background:rgba(251,113,133,.16);color:var(--rose)}
+  .b-status{background:rgba(251,191,36,.16);color:var(--amber)}
+  .pin{color:var(--violet);font-size:12px;margin-right:5px}
+  .note{font-size:11.5px;color:var(--amber);background:rgba(251,191,36,.07);border-left:2px solid var(--amber);padding:4px 8px;border-radius:0 6px 6px 0}
+  .lang{color:var(--faint)}
+  .meta{margin-left:auto;color:var(--faint);font-size:11px}
+
+  .empty{text-align:center;color:var(--faint);padding:60px 0}
+  footer{padding:40px 0 70px;color:var(--faint);font-size:12.5px;border-top:1px solid var(--line);margin-top:30px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="kicker">◆ MS-AI-Radar · auto-refreshed weekly</span>
+    <h1>The latest <span>Microsoft AI &amp; agent</span> solutions on GitHub.</h1>
+    <p class="lede">A living catalogue, scanned straight from the GitHub API — official Microsoft orgs plus high-signal community repos built on the stack. Archived &amp; superseded repos are filtered out; everything is ranked by stars and creation recency, and badged for freshness so the list never rots.</p>
+    <div class="stamp" id="stamp">Loading catalogue…</div>
+  </header>
+</div>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="row">
+      <input id="q" placeholder="Search repos, descriptions, topics…">
+      <div class="seg" id="src"><button data-v="all" class="on">All</button><button data-v="microsoft">Microsoft</button><button data-v="community">Community</button></div>
+      <select id="tier"><option value="all">Any tier</option><option value="flagship">Flagship (1k★+)</option><option value="established">Established (100★+)</option><option value="new">New this year</option><option value="emerging">Emerging</option></select>
+      <select id="fresh"><option value="all">Any freshness</option><option value="fresh">Fresh (≤3mo)</option><option value="active">Active (≤12mo)</option></select>
+      <select id="lang"><option value="all">Any language</option></select>
+      <select id="sort"><option value="stars">Sort: stars</option><option value="created">Sort: newest</option><option value="pushed">Sort: recently pushed</option></select>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="cats" id="cats"></div>
+  </div>
+</div>
+
+<div class="wrap"><div id="out"></div></div>
+
+<div class="wrap"><footer>
+  <p><b style="color:var(--ink)">MS-AI-Radar.</b> Generated by <span class="mono">scan.py</span> against the GitHub Search API. Methodology: orgs <span class="mono" id="orgs"></span> by keyword (no star floor) + topic search across all owners (community floor <span id="floor"></span>★); drop <span class="mono">archived</span> and anything not pushed within <span id="fm"></span> months; exclude infra repos; flag superseded/deprecated. Re-runs weekly via GitHub Actions — edit <span class="mono">scan.py</span> to tune scope.</p>
+  <div class="legend">
+    <span><span class="b b-flagship">flagship</span>1k★+</span>
+    <span><span class="b b-new">new</span>created this year</span>
+    <span><span class="b b-fresh">fresh</span>pushed ≤3mo</span>
+    <span><span class="b b-stale">stale</span>pushed &gt;12mo</span>
+    <span><span class="b b-sup">superseded</span>deprecated/moved</span>
+  </div>
+</footer></div>
+
+<script>
+let DATA=[], CAT="all", SRC="all";
+const $=s=>document.querySelector(s);
+
+fetch("./catalogue.json").then(r=>r.json()).then(p=>{
+  DATA=p.repos;
+  $("#stamp").innerHTML=`<b>${p.count}</b> repos · last scan <b>${p.generated_at.replace('T',' ').replace('Z',' UTC')}</b>`;
+  $("#orgs").textContent=(p.ms_orgs||[]).join(", ");
+  $("#floor").textContent=p.community_min_stars; $("#fm").textContent=p.fresh_months;
+  // languages
+  const langs=[...new Set(DATA.map(r=>r.lang).filter(Boolean))].sort();
+  langs.forEach(l=>{const o=document.createElement("option");o.value=l;o.textContent=l;$("#lang").appendChild(o)});
+  // category chips
+  const counts={}; DATA.forEach(r=>counts[r.category]=(counts[r.category]||0)+1);
+  const cats=["all",...Object.keys(counts).sort((a,b)=>counts[b]-counts[a])];
+  $("#cats").innerHTML=cats.map(c=>`<span class="cat ${c==='all'?'on':''}" data-c="${c}">${c==='all'?'All categories':c}<span class="n">${c==='all'?DATA.length:counts[c]}</span></span>`).join("");
+  document.querySelectorAll(".cat").forEach(el=>el.onclick=()=>{document.querySelectorAll(".cat").forEach(x=>x.classList.remove("on"));el.classList.add("on");CAT=el.dataset.c;render()});
+  render();
+}).catch(e=>{$("#out").innerHTML=`<div class="empty">Could not load catalogue.json — run <span class="mono">python3 scan.py</span> first.</div>`});
+
+$("#q").oninput=render; $("#tier").onchange=render; $("#fresh").onchange=render; $("#lang").onchange=render; $("#sort").onchange=render;
+document.querySelectorAll("#src button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#src button").forEach(x=>x.classList.remove("on"));b.classList.add("on");SRC=b.dataset.v;render()});
+
+function render(){
+  const q=$("#q").value.toLowerCase(), tier=$("#tier").value, fresh=$("#fresh").value, lang=$("#lang").value, sort=$("#sort").value;
+  let rows=DATA.filter(r=>
+    (CAT==="all"||r.category===CAT) &&
+    (SRC==="all"||r.source===SRC) &&
+    (tier==="all"||r.tier===tier) &&
+    (fresh==="all"|| (fresh==="active"? (r.fresh==="fresh"||r.fresh==="active"):r.fresh===fresh)) &&
+    (lang==="all"||r.lang===lang) &&
+    (!q || (r.repo+" "+r.desc+" "+(r.topics||[]).join(" ")).toLowerCase().includes(q))
+  );
+  rows.sort((a,b)=> sort==="stars"? ((b.pin?1:0)-(a.pin?1:0))||(b.stars-a.stars) : (b[sort]||"").localeCompare(a[sort]||""));
+  $("#count").textContent=`${rows.length} shown`;
+  if(!rows.length){$("#out").innerHTML=`<div class="empty">No repos match these filters.</div>`;return}
+
+  // group by category unless a single category is selected
+  let html="";
+  if(CAT==="all"){
+    const groups={}; rows.forEach(r=>(groups[r.category]=groups[r.category]||[]).push(r));
+    Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length).forEach(g=>{
+      html+=`<section class="group"><h2>${g} <span class="gn">${groups[g].length}</span></h2><div class="grid">${groups[g].map(card).join("")}</div></section>`;
+    });
+  } else {
+    html=`<section class="group"><div class="grid">${rows.map(card).join("")}</div></section>`;
+  }
+  $("#out").innerHTML=html;
+}
+
+function card(r){
+  const t=r.topics&&r.topics.length?r.topics.slice(0,3).join(" · "):"";
+  const statusBadge = r.status ? `<span class="b b-status">${r.status}</span>`
+                      : (r.superseded ? '<span class="b b-sup">superseded</span>' : '');
+  return `<a class="card" href="${r.url}" target="_blank" rel="noopener">
+    <div class="top"><span class="repo">${r.pin?'<span class="pin">📌</span>':''}${r.repo}</span><span class="stars">★ ${r.stars.toLocaleString()}</span></div>
+    <div class="desc">${esc(r.desc)||"<i style='color:var(--faint)'>no description</i>"}</div>
+    ${r.note?`<div class="note">${esc(r.note)}</div>`:''}
+    <div class="foot">
+      <span class="b b-${r.source==='microsoft'?'ms':'comm'}">${r.source==='microsoft'?'Microsoft':'community'}</span>
+      <span class="b b-${r.tier}">${r.tier}</span>
+      <span class="b b-${r.fresh}">${r.fresh}</span>
+      ${statusBadge}
+      ${r.lang?`<span class="lang">${r.lang}</span>`:''}
+      <span class="meta">created ${r.created} · pushed ${r.pushed}</span>
+    </div>
+    ${t?`<div class="foot" style="color:var(--faint)">${t}</div>`:''}
+  </a>`;
+}
+function esc(s){return (s||"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+</script>
+</body>
+</html>

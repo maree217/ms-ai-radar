@@ -1,0 +1,13 @@
+{
+  "_comment": "Curated overrides applied by scan.py. Key = 'owner/name' (preferred) or bare 'name'. Fields: category, status (maintenance|deprecated|moved), note, pin (bool), hide (bool). status of maintenance/deprecated/moved also sets the superseded flag.",
+
+  "microsoft/agent-framework":   { "pin": true },
+  "microsoft/mcp":               { "pin": true },
+  "microsoft/Foundry-Local":     { "pin": true, "category": "Models, training & optimization" },
+  "microsoft/Agents":            { "pin": true, "category": "Frameworks & SDKs" },
+
+  "microsoft/autogen":           { "status": "maintenance", "note": "Superseded by microsoft/agent-framework (MAF). In maintenance mode — use MAF for new work." },
+  "microsoft/semantic-kernel":   { "status": "maintenance", "note": "Folding into Microsoft Agent Framework; on long-term support for existing projects." },
+  "microsoft-foundry/mcp-foundry": { "status": "moved", "note": "Moved to the cloud-hosted Foundry MCP Server." },
+  "microsoft/project-oagents":   { "status": "deprecated", "note": "Experimental (2023); superseded by Microsoft Agent Framework." }
+}

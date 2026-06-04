@@ -1,0 +1,60 @@
+name: Refresh catalogue
+
+# Re-scans GitHub weekly (and on demand) so the radar never goes stale.
+on:
+  schedule:
+    - cron: "17 6 * * 1"        # every Monday 06:17 UTC
+  workflow_dispatch: {}
+  push:
+    paths: ["scan.py"]           # re-scan whenever the scanner logic changes
+
+permissions:
+  contents: write                # to commit the refreshed catalogue.json
+  pages: write
+  id-token: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # built-in token; fine for public search
+        run: python3 scan.py
+
+      - name: Commit refreshed catalogue
+        run: |
+          git config user.name  "ms-ai-radar-bot"
+          git config user.email "actions@github.com"
+          git add catalogue.json
+          if git diff --staged --quiet; then
+            echo "No catalogue changes."
+          else
+            git commit -m "chore: refresh catalogue $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: scan
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
